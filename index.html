@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Petshop Love - Painel</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+    <h1>Petshop Love</h1>
+
+    <section id="login-section">
+      <h2>Login</h2>
+      <input id="login-email" placeholder="Email" />
+      <input id="login-senha" type="password" placeholder="Senha" />
+      <button onclick="login()">Entrar</button>
+      <p id="login-msg"></p>
+    </section>
+
+    <section id="crud-section" class="hidden">
+      <button onclick="logout()" class="logout-btn">Sair</button>
+
+      <h2>Escolha a entidade</h2>
+      <select id="select-entidade" onchange="carregarCampos()">
+        <option value="cliente">Clientes</option>
+        <option value="animal">Animais</option>
+        <option value="atendimento">Atendimentos</option>
+        <option value="servico">Serviços</option>
+        <option value="atendimento-servico">Atendimento-Serviço</option>
+      </select>
+
+      <h3>Criar Registro</h3>
+      <div id="form-dinamico"></div>
+      <button onclick="criarRegistro()">Criar</button>
+
+      <h3>Operações</h3>
+      <input id="id-input" placeholder="ID para busca, atualização ou delete" />
+      <button onclick="buscarPorId()">Buscar por ID</button>
+      <button onclick="atualizarRegistro()">Atualizar</button>
+      <button onclick="deletarRegistro()">Deletar</button>
+      <button onclick="associarServico()">Associar Serviço a Atendimento</button>
+      <button onclick="calcularTotal()">Calcular Total de Serviços</button>
+
+
+
+      <h3>Lista</h3>
+      <button onclick="listarRegistros()">Atualizar Lista</button>
+      <pre id="lista"></pre>
+    </section>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
