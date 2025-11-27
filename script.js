@@ -118,12 +118,7 @@ function montarObjeto(entidade) {
     };
   }
 
-  else if (entidade === "atendimento-servico") {
-    obj = {
-      atendimento: { idAtendimento: Number(get("idAtendimento")) },
-      servico: { idServico: Number(get("idServico")) }
-    };
-  }
+  
 
   return obj;
 }
@@ -236,6 +231,17 @@ function deletarRegistro() {
       listarRegistros();
     });
 }
+
+function calcularTotal() {
+  fetch(`${API}/servico/com-total`, {
+    headers: { "Authorization": `Bearer ${token}` }
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert("Valor total de serviços: R$ " + data.total);
+    })
+    .catch(() => alert("Erro ao calcular total"));
+}
 function associarServico() {
   const idAtendimento = Number(get("idAtendimento"));
   const idServico = Number(get("idServico"));
@@ -258,15 +264,69 @@ function associarServico() {
       }
     });
 }
-function calcularTotal() {
-  fetch(`${API}/servico/com-total`, {
-    headers: { "Authorization": `Bearer ${token}` }
-  })
-    .then(res => res.json())
-    .then(data => {
-      alert("Valor total de serviços: R$ " + data.total);
-    })
-    .catch(() => alert("Erro ao calcular total"));
+async function mostrarServicosDoAtendimento(idAtendimento) {
+
+    try {
+        const response = await fetch(`http://localhost:8080/atendimento-servico/${idAtendimento}`);
+
+        if (!response.ok) {
+            throw new Error("Erro ao buscar serviços do atendimento");
+        }
+
+        const servicos = await response.json();
+
+        const lista = document.getElementById("listaServicosAtendimento");
+
+        lista.innerHTML = ""; // limpa antes de preencher
+
+        if (servicos.length === 0) {
+            lista.innerHTML = "<p>Nenhum serviço vinculado.</p>";
+            return;
+        }
+
+        servicos.forEach(s => {
+            lista.innerHTML += `
+                <li>
+                    <strong>${s.servico.nome}</strong> — R$ ${s.servico.valor}
+                </li>
+            `;
+        });
+
+    } catch (erro) {
+        console.error(erro);
+        alert("Erro ao carregar serviços deste atendimento.");
+    }
 }
+async function listarServicosComTotal() {
+
+    try {
+        const response = await fetch(`${API}/servico/com-total`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("Erro ao buscar total.");
+        }
+
+        const data = await response.json();
+
+        // Onde mostrar os dados
+        const area = document.getElementById("lista-servicos-total");
+
+        area.innerHTML = `
+            <h3>Serviços cadastrados</h3>
+            <pre>${JSON.stringify(data.servicos, null, 2)}</pre>
+            <h3>Total dos serviços: R$ ${data.valorTotal}</h3>
+        `;
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar total dos serviços.");
+    }
+}
+
+
+
 
 
